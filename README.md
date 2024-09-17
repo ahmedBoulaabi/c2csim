@@ -1,42 +1,50 @@
-# Attention aux chemins absolus
+## Project Setup Guide
 
-Dans Main.qml : 
-- source = "file://" + "/home/elias/TP_PROG/M1IM/Reseaux/c2csim/images/generated/car_modified_" + modelData.id + ".svg"
+### Warning: Absolute Paths
 
+In **Main.qml**:
+source = "file://" + "/your/path/to/project/images/generated/car_modified_" + modelData.id + ".svg"
 
-Dans la fonction applyColorToSVG() de SumoInterface.cpp:
-- QString originalFilePath = "/home/elias/TP_PROG/M1IM/Reseaux/c2csim/images/car-cropped.svg";
-- QString uniqueFileName = "/home/elias/TP_PROG/M1IM/Reseaux/c2csim/images/generated/car_modified_" + id + ".svg";
+In the **applyColorToSVG()** function of `SumoInterface.cpp`:
+QString originalFilePath = "/your/path/to/project/images/car-cropped.svg";
+QString uniqueFileName = "/your/path/to/project/images/generated/car_modified_" + id + ".svg";
 
+### Work Environment Initialization
 
-# Initialisation de l'environnement de travail
+1. Update the path to `libsumo.h`:
+   - Modify `#include "/your/path/to/project/sumo-integrator-master/lib/sumo/libsumo.h"` in **Sumo.h** to reflect your correct path.
+   - Similarly, modify `#include "/your/path/to/project/sumo-integrator-master/lib/sumo/libsumo.h"` in **compound.h**.
 
-- Modifier #include "/home/user/TP_PROG/M1IM/Reseaux/c2csim/sumo-integrator-master/lib/sumo/libsumo.h" dans Sumo.h pour mettre votre chemin de libsumo.h  
+2. Compile the project:
+   - Run the following command, replacing the path with your Qt6 path:
+   cmake -DCMAKE_PREFIX_PATH=/your/path/to/Qt/6.6.0/gcc_64/lib/cmake/Qt6 CMakeLists.txt
 
-- Pareil pour #include "/home/user/TP_PROG/M1IM/Reseaux/c2csim/sumo-integrator-master/lib/sumo/libsumo.h" dans compound.h, mettre votre chemin de libsumo.h  
+   - Then, compile using:
+   make
 
-- $ cmake -DCMAKE_PREFIX_PATH=/home/user/Qt/6.6.0/gcc_64/lib/cmake/Qt6 CMakeLists.txt   
-Pour compiler, remplacer le chemin ci-dessus par votre chemin menant à Qt6  
+3. Start the SUMO simulation:
+   - To run the simulation, execute either of the following commands after generating the executable:
+   sumo-gui --remote-port 6066 -c ./sumofiles/osm.sumocfg
 
-- $ make  
+   - Or use the shortcut:
+   make run
 
-- $ sumo-gui --remote-port 6066 -c ./sumofiles/osm.sumocfg  
-  ou  
-- $ make run  
-Une fois l'exécutable généré, lancer une des 2 commandes ci-dessus
+4. Launch the application:
+   - In a different terminal, run:
+   ./appsumotest
 
-- $ ./appsumotest  
-Lancer cette commande sur un autre terminal, en même temps que celle plus en haut
+   - Ensure this is done while the simulation is running.
 
-Cliquer sur le bouton Play/Run de Sumo pour lancer la simulation.  
-Changement de port possible en modifiant la valeur dans SumoInterface.cpp
+5. Start the simulation in SUMO:
+   - Click on the "Play/Run" button in SUMO to begin the simulation.
+   - Note: The remote port can be modified by changing its value in `SumoInterface.cpp`.
 
-## Commandes ajoutées au Makefile
+### Additional Commands in Makefile
 
-#### Run
-run:  
-&nbsp; &nbsp; &nbsp; &nbsp;sumo-gui --remote-port 6066 -c "./sumofiles/osm.sumocfg"  
-.PHONY : run  
+- **Run the simulation:**
+run:
+	sumogui --remote-port 6066 -c "./sumofiles/osm.sumocfg"
+.PHONY: run
 
-#### Restart (permet de ne pas avoir à retaper les autres commandes à chaque exécution)
+- **Restart the project (avoids repeating previous commands on each run):**
 restart: clean all run
